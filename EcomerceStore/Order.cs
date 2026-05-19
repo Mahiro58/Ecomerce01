@@ -6,6 +6,6 @@ namespace EcomerceStore
 {
     internal class Order
     {
-        public List<Product> Products { get; } = new List<Product>();>
+        public List<Product> Products { get; } = new List<Product>();
     }
 }
