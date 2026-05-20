@@ -74,5 +74,64 @@ namespace EcomerceStore
                 Console.WriteLine($"No products found in category '{category}'.");
             }
         }
+
+        public void AddProductToCart(User user, Product product, int quantity)
+        {
+            var cartItem = new CartItem();
+            cartItem.Products.Add(product);
+            cartItem.Quantity = quantity;
+            user.Cart.Add(cartItem);
+            Console.WriteLine($"{quantity} x {product.Name} has been added to {user.FirstName}'s cart.");
+        }
+
+        public void RemoveProductFromCart(User user, Product product)
+        {
+            var cartItem = user.Cart.Find(ci => ci.Products.Contains(product));
+            if (cartItem != null)
+            {
+                user.Cart.Remove(cartItem);
+                Console.WriteLine($"{product.Name} has been removed from {user.FirstName}'s cart.");
+            }
+            else
+            {
+                Console.WriteLine($"{product.Name} is not in {user.FirstName}'s cart.");
+            }
+        }
+
+        public void Checkout(User user)
+        {
+            if (user.Cart.Count == 0)
+            {
+                Console.WriteLine("Your cart is empty.");
+                return;
+            }
+            decimal total = 0;
+            foreach (var cartItem in user.Cart)
+            {
+                foreach (var product in cartItem.Products)
+                {
+                    total += product.Price * cartItem.Quantity;
+                }
+            }
+            var order = new Order();
+            user.Orders.Add(order);
+            Orders.Add(order);
+            user.Cart.Clear();
+            Console.WriteLine($"Checkout complete! Total amount: ${total}");
+        }
+
+        public void ShowUserOrders(User user)
+        {
+            if (user.Orders.Count == 0)
+            {
+                Console.WriteLine($"{user.FirstName} has no orders.");
+                return;
+            }
+            Console.WriteLine($"{user.FirstName}'s Orders:");
+            foreach (var order in user.Orders)
+            {
+                Console.WriteLine($"- Order ID: {order.GetHashCode()}");
+            }
+        }
     }
 }
